@@ -12,7 +12,6 @@
         ],
     'init_xml': [],
     'update_xml': [
-        'views/website_views.xml',
     ],
     'css': [],
     'js': [],
