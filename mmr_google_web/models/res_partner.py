@@ -1,17 +1,45 @@
 # -*- coding: utf-8 -*-
-from openerp import api, fields, models, _
-import base64
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
-from dateutil.relativedelta import relativedelta
-from datetime import datetime, date, timedelta
-from odoo.exceptions import UserError
+from odoo import models, fields
+import werkzeug.urls
 
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    def google_map_img(self, zoom=8, width=298, height=298):
-        return False
+    googlemap_search_key = fields.Char("Google Map Search Key")
+    googlemap_zoom = fields.Integer("Google Map Zoom")
+
+    def google_map_img(self, zoom=16, width=298, height=298):
+        google_maps_api_key = self.env['website'].get_current_website().google_maps_api_key
+        if not google_maps_api_key:
+            return False
+        if self.googlemap_search_key:
+            params = {
+                'center': '%s, %s %s, %s' % (self.googlemap_search_key or '', self.city or '', self.zip or '', self.country_id and self.country_id.display_name or ''),
+                'size': "%sx%s" % (width, height),
+                'zoom': self.googlemap_zoom or zoom,
+                'sensor': 'false',
+                'key': google_maps_api_key,
+            }
+        else:
+            params = {
+                'center': '%s, %s %s, %s' % (self.street or '', self.city or '', self.zip or '', self.country_id and self.country_id.display_name or ''),
+                'size': "%sx%s" % (width, height),
+                'zoom': self.googlemap_zoom or zoom,
+                'sensor': 'false',
+                'key': google_maps_api_key,
+            }
+        return '//maps.googleapis.com/maps/api/staticmap?' + werkzeug.urls.url_encode(params)
 
     def google_map_link(self, zoom=10):
-        return 'https://www.google.com/search?safe=strict&sz=16&q=mmr%20semarang&sa=X&ved=2ahUKEwi-3pjA4JLxAhWYT30KHQ_0Az0QvS4wAHoECAMQKw&biw=1294&bih=637&dpr=1&tbs=lrf:!1m4!1u3!2m2!3m1!1e1!1m4!1u2!2m2!2m1!1e1!2m1!1e2!2m1!1e3!3sIAE,lf:1,lf_ui:2&tbm=lcl&rflfq=1&num=10&rldimm=4370939972821316054&lqi=CgxtbXIgc2VtYXJhbmdIwOqi7purgIAIWhIQABgBIgxtbXIgc2VtYXJhbmeSARBjb3Jwb3JhdGVfb2ZmaWNlqgELEAEqByIDbW1yKCY&rlst=f#rlfi=hd:;si:4370939972821316054,l,CgxtbXIgc2VtYXJhbmdIwOqi7purgIAIWhIQABgBIgxtbXIgc2VtYXJhbmeSARBjb3Jwb3JhdGVfb2ZmaWNlqgELEAEqByIDbW1yKCY;mv:[[-6.9626785,110.4687417],[-7.1193903999999995,110.3405669]];tbs:lrf:!1m4!1u3!2m2!3m1!1e1!1m4!1u2!2m2!2m1!1e1!2m1!1e2!2m1!1e3!3sIAE,lf:1,lf_ui:2'
+        if self.googlemap_search_key:
+            params = {
+                'q': '%s, %s %s, %s' % (self.googlemap_search_key or '', self.city or '', self.zip or '', self.country_id and self.country_id.display_name or ''),
+                'z': zoom,
+            }
+        else:
+            params = {
+                'q': '%s, %s %s, %s' % (self.street or '', self.city or '', self.zip or '', self.country_id and self.country_id.display_name or ''),
+                'z': zoom,
+            }
+        return 'https://maps.google.com/maps?' + werkzeug.urls.url_encode(params)

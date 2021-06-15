@@ -13,6 +13,9 @@
     'init_xml': [],
     'update_xml': [
     ],
+    'data': [
+        'views/res_partner_views.xml'
+        ],
     'css': [],
     'js': [],
     'installable': True,
