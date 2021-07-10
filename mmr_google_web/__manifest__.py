@@ -14,7 +14,8 @@
     'update_xml': [
     ],
     'data': [
-        'views/res_partner_views.xml'
+        'views/res_partner_views.xml',
+        'views/website_templates.xml'
         ],
     'css': [],
     'js': [],

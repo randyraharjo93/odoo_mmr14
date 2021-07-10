@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="company_description_inherit" inherit_id="website.company_description" name="Google map" customize_show="True">
+    <xpath expr="//address" position="replace">
+        <address itemscope="itemscope" itemtype="http://schema.org/Organization">
+            <!-- TODO widget contact must add itemprop attributes -->
+            <div t-field="res_company.partner_id" t-options='{
+                    "widget": "contact",
+                    "fields": ["name", "address", "phone", "mobile", "email"]}'/>
+            <a t-att-href="res_company.google_map_link()" target="_BLANK">
+                <img class="img-fluid" src="/mmr_google_web/static/src/img/maps.png" alt="Google Maps"/>
+            </a>
+        </address>
+    </xpath>
+</template>
+
+<template id="company_description_google_map_inherit" inherit_id="website.company_description_google_map" name="Google map" customize_show="True">
+    <xpath expr="//t[@t-if='res_company.google_map_img()']" position="replace">
+        <t t-if="res_company.google_map_img()">
+            <span></span>
+        </t>
+    </xpath>
+</template>
+
+</odoo>

@@ -32,14 +32,4 @@ class ResPartner(models.Model):
         return '//maps.googleapis.com/maps/api/staticmap?' + werkzeug.urls.url_encode(params)
 
     def google_map_link(self, zoom=10):
-        if self.googlemap_search_key:
-            params = {
-                'q': '%s, %s %s, %s' % (self.googlemap_search_key or '', self.city or '', self.zip or '', self.country_id and self.country_id.display_name or ''),
-                'z': zoom,
-            }
-        else:
-            params = {
-                'q': '%s, %s %s, %s' % (self.street or '', self.city or '', self.zip or '', self.country_id and self.country_id.display_name or ''),
-                'z': zoom,
-            }
-        return 'https://maps.google.com/maps?' + werkzeug.urls.url_encode(params)
+        return 'https://www.google.com/maps/place/PT.+Multi+Medika+Raharjo/@-6.9824906,110.3893967,15z/data=!4m2!3m1!1s0x0:0x3ca8b2bf3e91f1d6?sa=X&ved=2ahUKEwj854vOvtjxAhUjheYKHaWOC_oQ_BIwEnoECEcQBQ'
